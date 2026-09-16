@@ -2,6 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "patients")
@@ -11,20 +14,26 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre es obligatorio")
     @Column(nullable = false)
     private String firstName;
 
+    @NotBlank(message = "El apellido es obligatorio")
     @Column(nullable = false)
     private String lastName;
 
+    @NotBlank(message = "El documento es obligatorio")
     @Column(nullable = false, unique = true)
     private String documentNumber;
 
     private String phone;
 
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Debe ser un formato de email válido")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotNull(message = "La fecha de nacimiento es obligatoria")
     @Column(nullable = false)
     private LocalDate birthDate;
 
