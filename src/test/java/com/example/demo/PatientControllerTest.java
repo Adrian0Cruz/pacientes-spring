@@ -6,12 +6,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional; // <-- NUEVO IMPORT
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional // <-- NUEVA ANOTACIÓN: Deshace los cambios en la BD al terminar el test
 public class PatientControllerTest {
 
     @Autowired
@@ -19,13 +21,13 @@ public class PatientControllerTest {
 
     @Test
     public void testCreatePatient_Success() throws Exception {
-        // JSON válido con todos los campos obligatorios
+        // ... (el resto del código se queda exactamente igual)
         String patientJson = """
                 {
                     "firstName": "Juan",
                     "lastName": "Perez",
-                    "documentNumber": "123456789",
-                    "email": "juan@example.com",
+                    "documentNumber": "12345678999",
+                    "email": "juan999@example.com",
                     "birthDate": "1990-01-01"
                 }
                 """;
@@ -33,7 +35,7 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(patientJson))
-                .andExpect(status().isCreated()); // Esperamos un 201 Created
+                .andExpect(status().isCreated());
     }
 
     @Test

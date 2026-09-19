@@ -29,6 +29,7 @@ services:
       - DB_NAME=patient_service_db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET:-my_super_secret_jwt_key_that_must_be_at_least_256_bits_long!}
     depends_on:
       db:
         condition: service_healthy
