@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional; // <-- NUEVO IMPORT
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +21,7 @@ public class PatientControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser // Simula un usuario autenticado para que pase el filtro
     public void testCreatePatient_Success() throws Exception {
         // ... (el resto del código se queda exactamente igual)
         String patientJson = """
@@ -39,6 +41,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testCreatePatient_Failure_InvalidData() throws Exception {
         // JSON sin email y sin apellido (debe fallar la validación)
         String invalidPatientJson = """
@@ -53,5 +56,23 @@ public class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidPatientJson))
                 .andExpect(status().isBadRequest()); // Esperamos un 400 Bad Request
+    }
+
+    @Test
+    public void testCreatePatient_Unauthorized() throws Exception {
+        // Al no tener @WithMockUser ni enviar token, debe dar 401
+        String patientJson = """
+                {
+                    "firstName": "Juan",
+                    "lastName": "Perez",
+                    "documentNumber": "12345678999",
+                    "email": "juan999@example.com",
+                    "birthDate": "1990-01-01"
+                }
+                """;
+        mockMvc.perform(post("/patients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(patientJson))
+                .andExpect(status().isUnauthorized());
     }
 }
