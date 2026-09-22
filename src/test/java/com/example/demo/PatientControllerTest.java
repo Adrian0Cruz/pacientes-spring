@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional // <-- NUEVA ANOTACIÓN: Deshace los cambios en la BD al terminar el test
+@SuppressWarnings("null")
 public class PatientControllerTest {
 
     @Autowired
